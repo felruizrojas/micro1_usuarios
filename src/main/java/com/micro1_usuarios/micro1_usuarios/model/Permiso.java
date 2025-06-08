@@ -1,5 +1,8 @@
 package com.micro1_usuarios.micro1_usuarios.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,9 +30,11 @@ public class Permiso {
     private String nombrePermiso;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean permisoActivo = true;
 
     @ManyToOne
+    @JsonBackReference
     private Rol rol;
 
 }

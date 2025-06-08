@@ -1,5 +1,7 @@
 package com.micro1_usuarios.micro1_usuarios.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,22 +31,23 @@ public class Usuario {
     private String pass;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean usuarioActivo = true;
 
     @Column(length = 13, nullable = false)
     private String run;
 
     @Column(length = 50, nullable = false)
-    private String pNombre;
+    private String primerNombre;
 
     @Column(length = 50)
-    private String sNombre;
+    private String segundoNombre;
 
     @Column(length = 50, nullable = false)
-    private String pApellido;
+    private String primerApellido;
 
-    @Column(length = 50, nullable = false)
-    private String sApellido;
+    @Column(length = 50)
+    private String segundoApellido;
 
     @Column(length = 100, nullable = false)
     private String correo;
@@ -59,6 +62,7 @@ public class Usuario {
     private String region;
 
     @ManyToOne
+    //@JsonBackReference
     private Rol rol;
 
 }

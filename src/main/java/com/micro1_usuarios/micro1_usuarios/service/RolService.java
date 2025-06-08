@@ -22,6 +22,7 @@ public class RolService {
     private PermisoRepository permisoRepository;
 
     public Rol crearRol(Rol rol) {
+        //rol.setRolActivo(true);
         return rolRepository.save(rol);
     }
 
@@ -36,7 +37,7 @@ public class RolService {
     public Rol actualizarRol(int id, Rol rolActualizado) {
         return rolRepository.findById(id).map(rol -> {
             rol.setNombreRol(rolActualizado.getNombreRol());
-            rol.setRolActivo(rolActualizado.isRolActivo());
+            //rol.setRolActivo(rolActualizado.isRolActivo());
             return rolRepository.save(rol);
         }).orElseGet(() -> {
             rolActualizado.setId(id);

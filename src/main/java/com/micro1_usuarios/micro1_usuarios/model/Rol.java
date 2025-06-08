@@ -2,6 +2,9 @@ package com.micro1_usuarios.micro1_usuarios.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,8 +33,17 @@ public class Rol {
     private String nombreRol;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean rolActivo = true;
 
     @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Permiso> permisos;
+
+    /*
+    @OneToMany(mappedBy = "rol")
+    @JsonManagedReference
+    private List<Usuario> usuarios;
+    */
+
 }
