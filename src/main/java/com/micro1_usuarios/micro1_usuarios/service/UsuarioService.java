@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.micro1_usuarios.micro1_usuarios.model.Rol;
 import com.micro1_usuarios.micro1_usuarios.model.Usuario;
+import com.micro1_usuarios.micro1_usuarios.repository.RolRepository;
 import com.micro1_usuarios.micro1_usuarios.repository.UsuarioRepository;
 
 @Service
@@ -15,6 +17,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private RolRepository rolRepository;
 
     public Usuario crearUsuario(Usuario usuario) {
         return usuarioRepository.save(usuario);
@@ -48,9 +53,31 @@ public class UsuarioService {
         });
     }
 
+    public Usuario asignarRol(int usuarioId, int rolId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Rol rol = rolRepository.findById(rolId)
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        usuario.setRol(rol);
+        return usuarioRepository.save(usuario);
+    }
+
+    /* asignar un rol con un nombre específico:
+    public Usuario asignarRolPorNombre(int usuarioId, String nombreRol) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Rol rol = rolRepository.findByNombreRol(nombreRol);
+        if (rol == null) {
+            throw new RuntimeException("Rol no encontrado");
+        }
+        usuario.setRol(rol);
+        return usuarioRepository.save(usuario);
+    }
+    */
+
     public void desactivarUsuario(int id) {
         Usuario usuario = usuarioRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         usuario.setUsuarioActivo(false); //
         usuarioRepository.save(usuario);
     }

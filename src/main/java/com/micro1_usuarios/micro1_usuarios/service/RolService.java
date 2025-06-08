@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.micro1_usuarios.micro1_usuarios.model.Permiso;
 import com.micro1_usuarios.micro1_usuarios.model.Rol;
+import com.micro1_usuarios.micro1_usuarios.repository.PermisoRepository;
 import com.micro1_usuarios.micro1_usuarios.repository.RolRepository;
 
 @Service
@@ -15,6 +17,9 @@ public class RolService {
 
     @Autowired
     private RolRepository rolRepository;
+
+    @Autowired
+    private PermisoRepository permisoRepository;
 
     public Rol crearRol(Rol rol) {
         return rolRepository.save(rol);
@@ -37,6 +42,16 @@ public class RolService {
             rolActualizado.setId(id);
             return rolRepository.save(rolActualizado);
         });
+    }
+
+    public Rol asignarPermiso(int rolId, int permisoId) {
+        Rol rol = rolRepository.findById(rolId)
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        Permiso permiso = permisoRepository.findById(permisoId)
+                .orElseThrow(() -> new RuntimeException("Permiso no encontrado"));
+        permiso.setRol(rol);
+        permisoRepository.save(permiso);
+        return rol;
     }
 
     public void desactivarRol(int id) {

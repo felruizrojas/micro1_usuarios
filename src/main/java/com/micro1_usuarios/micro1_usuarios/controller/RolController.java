@@ -5,17 +5,19 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.micro1_usuarios.micro1_usuarios.model.Rol;
 import com.micro1_usuarios.micro1_usuarios.service.RolService;
 
-@Controller
+@RestController
+@RequestMapping("/roles")
 
 public class RolController {
 
@@ -44,6 +46,12 @@ public class RolController {
     public ResponseEntity<Rol> actualizarRol(@PathVariable int id, @RequestBody Rol rolActualizado) {
         Rol actualizado = rolService.actualizarRol(id, rolActualizado);
         return ResponseEntity.ok(actualizado);
+    }
+
+    @PutMapping("/{rolId}/permiso/{permisoId}") // PUT /roles/3/permiso/7
+    public ResponseEntity<Rol> asignarPermiso(@PathVariable int rolId, @PathVariable int permisoId) {
+        Rol rolActualizado = rolService.asignarPermiso(rolId, permisoId);
+        return ResponseEntity.ok(rolActualizado);
     }
 
     @PutMapping("/{id}/desactivar")
