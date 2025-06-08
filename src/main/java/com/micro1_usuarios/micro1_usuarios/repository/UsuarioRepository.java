@@ -8,6 +8,7 @@ import com.micro1_usuarios.micro1_usuarios.model.Usuario;
 @Repository
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
-    // Aquí puedes agregar métodos personalizados si es necesario
+    
+    //private boolean active = true;
 
 }

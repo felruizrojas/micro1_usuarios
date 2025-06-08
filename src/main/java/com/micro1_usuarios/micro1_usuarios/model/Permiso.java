@@ -25,4 +25,7 @@ public class Permiso {
     @Column(length = 50, nullable = false, unique = true)
     private String nombrePermiso;
 
+    @Column(nullable = false)
+    private boolean permisoActivo = true;
+
 }

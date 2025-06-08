@@ -23,5 +23,8 @@ public class Rol {
     private int id;
 
     @Column(length = 50, nullable = false, unique = true)
-    private String nombreRol; 
+    private String nombreRol;
+
+    @Column(nullable = false)
+    private boolean rolActivo = true;
 }

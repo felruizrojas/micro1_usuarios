@@ -27,6 +27,9 @@ public class Usuario {
     @Column(length = 50, nullable = false)
     private String pass;
 
+    @Column(nullable = false)
+    private boolean usuarioActivo = true;
+
     @Column(length = 13, nullable = false)
     private String run;
 
@@ -53,4 +56,5 @@ public class Usuario {
 
     @Column(length = 250, nullable = false)
     private String region;
+
 }
