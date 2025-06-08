@@ -1,5 +1,6 @@
 package com.micro1_usuarios.micro1_usuarios.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,9 @@ public class RolService {
     private PermisoRepository permisoRepository;
 
     public Rol crearRol(Rol rol) {
-        //rol.setRolActivo(true);
+        if (rol.getPermisos() == null) {
+            rol.setPermisos(new ArrayList<>());
+        }
         return rolRepository.save(rol);
     }
 
@@ -37,7 +40,7 @@ public class RolService {
     public Rol actualizarRol(int id, Rol rolActualizado) {
         return rolRepository.findById(id).map(rol -> {
             rol.setNombreRol(rolActualizado.getNombreRol());
-            //rol.setRolActivo(rolActualizado.isRolActivo());
+            // rol.setRolActivo(rolActualizado.isRolActivo());
             return rolRepository.save(rol);
         }).orElseGet(() -> {
             rolActualizado.setId(id);
