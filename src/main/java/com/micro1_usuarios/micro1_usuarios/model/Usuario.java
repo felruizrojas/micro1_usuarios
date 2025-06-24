@@ -1,5 +1,6 @@
 package com.micro1_usuarios.micro1_usuarios.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -32,7 +33,7 @@ public class Usuario {
     private String pass;
 
     @Column(nullable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean usuarioActivo = true;
 
     @Column(length = 13, nullable = false)
@@ -66,6 +67,16 @@ public class Usuario {
     @JsonProperty("estado")
     public String getEstado() {
         return usuarioActivo ? "activo" : "desactivo";
+    }
+
+    // Getter personalizado para serializar el rol solo si está activo
+    @JsonProperty("rol")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public Rol getRolActivo() {
+        if (this.rol != null && this.rol.isRolActivo()) {
+            return this.rol;
+        }
+        return null;
     }
 
     @ManyToOne

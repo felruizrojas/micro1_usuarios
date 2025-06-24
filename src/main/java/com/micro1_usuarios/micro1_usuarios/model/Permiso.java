@@ -30,7 +30,7 @@ public class Permiso {
     private String nombrePermiso;
 
     @Column(nullable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean permisoActivo = true;
 
     // Método para mostrar el estado como texto en JSON

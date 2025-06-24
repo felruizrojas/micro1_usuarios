@@ -2,6 +2,7 @@ package com.micro1_usuarios.micro1_usuarios.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -33,7 +34,7 @@ public class Rol {
     private String nombreRol;
 
     @Column(nullable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean rolActivo = true;
 
     // Método para mostrar estado como texto en JSON
@@ -42,14 +43,23 @@ public class Rol {
         return rolActivo ? "activo" : "desactivo";
     }
 
+    // Método para filtrar permisos activos
+    @JsonProperty("permisos")
+    public List<Permiso> getPermisosActivos() {
+        return permisos.stream()
+                .filter(Permiso::isPermisoActivo)
+                .toList();
+    }
+
     @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Permiso> permisos;
 
     /*
-    @OneToMany(mappedBy = "rol")
-    @JsonManagedReference
-    private List<Usuario> usuarios;
-    */
+     * @OneToMany(mappedBy = "rol")
+     * 
+     * @JsonManagedReference
+     * private List<Usuario> usuarios;
+     */
 
 }

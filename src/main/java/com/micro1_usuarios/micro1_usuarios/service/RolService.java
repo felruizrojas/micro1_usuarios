@@ -39,11 +39,12 @@ public class RolService {
 
     public Rol actualizarRol(int id, Rol rolActualizado) {
         return rolRepository.findById(id).map(rol -> {
-            rol.setNombreRol(rolActualizado.getNombreRol());
-            // rol.setRolActivo(rolActualizado.isRolActivo());
+            if (rolActualizado.getNombreRol() != null)
+                rol.setNombreRol(rolActualizado.getNombreRol());
             return rolRepository.save(rol);
         }).orElseGet(() -> {
             rolActualizado.setId(id);
+            rolActualizado.setRolActivo(true);
             return rolRepository.save(rolActualizado);
         });
     }
@@ -62,6 +63,13 @@ public class RolService {
         Rol rol = rolRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
         rol.setRolActivo(false); //
+        rolRepository.save(rol);
+    }
+
+    public void activarRol(int id) {
+        Rol rol = rolRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        rol.setRolActivo(true); //
         rolRepository.save(rol);
     }
 }

@@ -32,6 +32,9 @@ public class UsuarioService {
         if (usuario.getRol() != null && usuario.getRol().getId() != 0) {
             Rol rol = rolRepository.findById(usuario.getRol().getId())
                     .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+            if (!rol.isRolActivo()) {
+                throw new RuntimeException("No se puede usar un rol desactivado al crear el usuario");
+            }
             usuario.setRol(rol);
         }
         return usuarioRepository.save(usuario);
@@ -76,6 +79,9 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         Rol rol = rolRepository.findById(rolId)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        if (!rol.isRolActivo()) {
+            throw new RuntimeException("No se puede asignar un rol desactivado");
+        }
         usuario.setRol(rol);
         return usuarioRepository.save(usuario);
     }
@@ -97,7 +103,7 @@ public class UsuarioService {
     public void desactivarUsuario(int id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        usuario.setUsuarioActivo(false); //desactivar usuario
+        usuario.setUsuarioActivo(false); // desactivar usuario
         usuarioRepository.save(usuario);
     }
 

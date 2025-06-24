@@ -27,7 +27,7 @@ public class PermisoController {
     /*
      * Controlador REST para gestionar permisos.
      * Proporciona endpoints para:
-    */
+     */
 
     // Crear un nuevo permiso (POST)
     @PostMapping
@@ -61,6 +61,13 @@ public class PermisoController {
     @PutMapping("/{id}/desactivar")
     public ResponseEntity<Void> desactivarPermiso(@PathVariable int id) {
         permisoService.desactivarPermiso(id);
+        return ResponseEntity.noContent().build(); // 204 No Content
+    }
+
+    // Activar un permiso (PUT)
+    @PutMapping("/{id}/activar")
+    public ResponseEntity<Void> activarPermiso(@PathVariable int id) {
+        permisoService.activarPermiso(id);
         return ResponseEntity.noContent().build(); // 204 No Content
     }
 }

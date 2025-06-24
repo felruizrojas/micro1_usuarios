@@ -27,7 +27,7 @@ public class RolController {
     /*
      * Controlador REST para gestionar roles.
      * Proporciona endpoints para:
-    */
+     */
 
     // Crear un nuevo rol (POST)
     @PostMapping
@@ -68,6 +68,13 @@ public class RolController {
     @PutMapping("/{id}/desactivar")
     public ResponseEntity<Void> desactivarRol(@PathVariable int id) {
         rolService.desactivarRol(id);
+        return ResponseEntity.noContent().build(); // 204 No Content
+    }
+
+    // Activar un rol (PUT)
+    @PutMapping("/{id}/activar")
+    public ResponseEntity<Void> activarRol(@PathVariable int id) {
+        rolService.activarRol(id);
         return ResponseEntity.noContent().build(); // 204 No Content
     }
 }

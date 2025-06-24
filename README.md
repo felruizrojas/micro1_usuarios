@@ -113,6 +113,9 @@ http://localhost:8080/roles/1/permiso/1
 ### PUT - DESACTIVAR ROL
 http://localhost:8080/roles/1/desactivar
 
+### PUT - ACTIVAR ROL
+http://localhost:8080/roles/1/desactivar
+
 
 
 ## PERMISOS
@@ -154,3 +157,6 @@ http://localhost:8080/permisos/1
 
 ### PUT - DESACTIVAR PERMISO
 http://localhost:8080/permisos/1/desactivar
+
+### PUT - ACTIVAR PERMISO
+http://localhost:8080/permisos/1/activar

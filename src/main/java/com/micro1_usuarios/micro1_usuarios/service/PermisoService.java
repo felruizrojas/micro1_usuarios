@@ -12,12 +12,12 @@ import com.micro1_usuarios.micro1_usuarios.repository.PermisoRepository;
 @Service
 
 public class PermisoService {
-    
+
     @Autowired
     private PermisoRepository permisoRepository;
 
     public Permiso crearPermiso(Permiso permiso) {
-        //permiso.setPermisoActivo(true);
+        // permiso.setPermisoActivo(true);
         return permisoRepository.save(permiso);
     }
 
@@ -31,8 +31,8 @@ public class PermisoService {
 
     public Permiso actualizarPermiso(int id, Permiso permisoActualizado) {
         return permisoRepository.findById(id).map(permiso -> {
-            permiso.setNombrePermiso(permisoActualizado.getNombrePermiso());
-            //permiso.setPermisoActivo(permisoActualizado.isPermisoActivo());
+            if (permisoActualizado.getNombrePermiso() != null)
+                permiso.setNombrePermiso(permisoActualizado.getNombrePermiso());
             return permisoRepository.save(permiso);
         }).orElseGet(() -> {
             permisoActualizado.setId(id);
@@ -44,6 +44,13 @@ public class PermisoService {
         Permiso permiso = permisoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Permiso no encontrado"));
         permiso.setPermisoActivo(false); //
+        permisoRepository.save(permiso);
+    }
+
+    public void activarPermiso(int id) {
+        Permiso permiso = permisoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Permiso no encontrado"));
+        permiso.setPermisoActivo(true); //
         permisoRepository.save(permiso);
     }
 }
