@@ -59,6 +59,9 @@ http://localhost:8080/usuarios/1/rol/1
 ### PUT - DESACTIVAR USUARIO
 http://localhost:8080/usuarios/1/desactivar
 
+### PUT - ACTIVAR USUARIO
+http://localhost:8080/usuarios/1/activar
+
 
 
 ## ROLES

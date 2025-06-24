@@ -33,6 +33,12 @@ public class Permiso {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean permisoActivo = true;
 
+    // Método para mostrar el estado como texto en JSON
+    @JsonProperty("estado")
+    public String getEstado() {
+        return permisoActivo ? "activo" : "desactivo";
+    }
+
     @ManyToOne
     @JsonBackReference
     private Rol rol;

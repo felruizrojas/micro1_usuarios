@@ -16,7 +16,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity // en una entidad de intersección se crearía una clase @Data sin @Entity y se le asignaría la tabla de intersección
+@Entity // en una entidad de intersección se crearía una clase @Data sin @Entity y se le
+        // asignaría la tabla de intersección
 @Table(name = "usuarios")
 
 public class Usuario {
@@ -61,8 +62,14 @@ public class Usuario {
     @Column(length = 250, nullable = false)
     private String region;
 
+    // Método para mostrar el estado como texto en la respuesta JSON
+    @JsonProperty("estado")
+    public String getEstado() {
+        return usuarioActivo ? "activo" : "desactivo";
+    }
+
     @ManyToOne
-    //@JsonBackReference
+    // @JsonBackReference
     private Rol rol;
 
 }

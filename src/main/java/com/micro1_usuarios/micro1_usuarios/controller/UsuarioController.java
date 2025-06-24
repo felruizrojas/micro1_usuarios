@@ -27,7 +27,7 @@ public class UsuarioController {
     /*
      * Controlador REST para gestionar usuarios.
      * Proporciona endpoints para:
-    */
+     */
 
     // Crear un nuevo usuario (POST)
     @PostMapping
@@ -57,6 +57,7 @@ public class UsuarioController {
         return ResponseEntity.ok(actualizado);
     }
 
+    // Asignar un rol a un usuario (PUT)
     @PutMapping("/{usuarioId}/rol/{rolId}") // PUT /usuarios/5/rol/2
     public ResponseEntity<Usuario> asignarRol(@PathVariable int usuarioId, @PathVariable int rolId) {
         Usuario usuarioActualizado = usuarioService.asignarRol(usuarioId, rolId);
@@ -64,18 +65,29 @@ public class UsuarioController {
     }
 
     /*
-    // Asignar un rol a un usuario (PUT)
-    @PutMapping("/{usuarioId}/asignar-rol/{rolId}") //PUT /usuarios/123/asignar-rol/456
-    public ResponseEntity<Usuario> asignarRol(@PathVariable int usuarioId, @PathVariable int rolId) {
-        Usuario actualizado = usuarioService.asignarRol(usuarioId, rolId);
-        return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
-    }
-    */
+     * // Asignar un rol a un usuario (PUT)
+     * 
+     * @PutMapping("/{usuarioId}/asignar-rol/{rolId}") //PUT
+     * /usuarios/123/asignar-rol/456
+     * public ResponseEntity<Usuario> asignarRol(@PathVariable int
+     * usuarioId, @PathVariable int rolId) {
+     * Usuario actualizado = usuarioService.asignarRol(usuarioId, rolId);
+     * return actualizado != null ? ResponseEntity.ok(actualizado) :
+     * ResponseEntity.notFound().build();
+     * }
+     */
 
     // Desactivar un usuario (PUT)
     @PutMapping("/{id}/desactivar")
     public ResponseEntity<Void> desactivarUsuario(@PathVariable int id) {
         usuarioService.desactivarUsuario(id);
+        return ResponseEntity.noContent().build(); // 204 No Content
+    }
+
+    // Activar un usuario (PUT)
+    @PutMapping("/{id}/activar")
+    public ResponseEntity<Void> activarUsuario(@PathVariable int id) {
+        usuarioService.activarUsuario(id);
         return ResponseEntity.noContent().build(); // 204 No Content
     }
 }

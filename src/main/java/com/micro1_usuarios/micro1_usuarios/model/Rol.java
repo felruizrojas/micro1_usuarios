@@ -36,6 +36,12 @@ public class Rol {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean rolActivo = true;
 
+    // Método para mostrar estado como texto en JSON
+    @JsonProperty("estado")
+    public String getEstado() {
+        return rolActivo ? "activo" : "desactivo";
+    }
+
     @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Permiso> permisos;

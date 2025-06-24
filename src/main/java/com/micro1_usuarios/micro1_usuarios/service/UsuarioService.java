@@ -22,11 +22,11 @@ public class UsuarioService {
     private RolRepository rolRepository;
 
     /*
-    public Usuario crearUsuario(Usuario usuario) {
-        // usuario.setUsuarioActivo(true);
-        return usuarioRepository.save(usuario);
-    }
-    */
+     * public Usuario crearUsuario(Usuario usuario) {
+     * // usuario.setUsuarioActivo(true);
+     * return usuarioRepository.save(usuario);
+     * }
+     */
 
     public Usuario crearUsuario(Usuario usuario) {
         if (usuario.getRol() != null && usuario.getRol().getId() != 0) {
@@ -47,17 +47,22 @@ public class UsuarioService {
 
     public Usuario actualizarUsuario(int id, Usuario usuarioActualizado) {
         return usuarioRepository.findById(id).map(usuario -> {
-            usuario.setUser(usuarioActualizado.getUser());
-            usuario.setPass(usuarioActualizado.getPass());
-            // usuario.setUsuarioActivo(usuarioActualizado.isUsuarioActivo());
-            usuario.setPrimerNombre(usuarioActualizado.getPrimerNombre());
-            usuario.setPrimerNombre(usuarioActualizado.getPrimerNombre());
-            usuario.setPrimerApellido(usuarioActualizado.getPrimerApellido());
-            usuario.setPrimerApellido(usuarioActualizado.getPrimerApellido());
-            usuario.setCorreo(usuarioActualizado.getCorreo());
-            usuario.setDireccion(usuarioActualizado.getDireccion());
-            usuario.setCiudad(usuarioActualizado.getCiudad());
-            usuario.setRegion(usuarioActualizado.getRegion());
+            if (usuarioActualizado.getUser() != null)
+                usuario.setUser(usuarioActualizado.getUser());
+            if (usuarioActualizado.getPass() != null)
+                usuario.setPass(usuarioActualizado.getPass());
+            if (usuarioActualizado.getPrimerNombre() != null)
+                usuario.setPrimerNombre(usuarioActualizado.getPrimerNombre());
+            if (usuarioActualizado.getPrimerApellido() != null)
+                usuario.setPrimerApellido(usuarioActualizado.getPrimerApellido());
+            if (usuarioActualizado.getCorreo() != null)
+                usuario.setCorreo(usuarioActualizado.getCorreo());
+            if (usuarioActualizado.getDireccion() != null)
+                usuario.setDireccion(usuarioActualizado.getDireccion());
+            if (usuarioActualizado.getCiudad() != null)
+                usuario.setCiudad(usuarioActualizado.getCiudad());
+            if (usuarioActualizado.getRegion() != null)
+                usuario.setRegion(usuarioActualizado.getRegion());
             return usuarioRepository.save(usuario);
         }).orElseGet(() -> {
             usuarioActualizado.setId(id);
@@ -76,7 +81,7 @@ public class UsuarioService {
     }
 
     /*
-     * asignar un rol con un nombre específico:
+     * //asignar un rol con un nombre específico:
      * public Usuario asignarRolPorNombre(int usuarioId, String nombreRol) {
      * Usuario usuario = usuarioRepository.findById(usuarioId)
      * .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -92,7 +97,14 @@ public class UsuarioService {
     public void desactivarUsuario(int id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        usuario.setUsuarioActivo(false); //
+        usuario.setUsuarioActivo(false); //desactivar usuario
+        usuarioRepository.save(usuario);
+    }
+
+    public void activarUsuario(int id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        usuario.setUsuarioActivo(true); // activar usuario
         usuarioRepository.save(usuario);
     }
 }
