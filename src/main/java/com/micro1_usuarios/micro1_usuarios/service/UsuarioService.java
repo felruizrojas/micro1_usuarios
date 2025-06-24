@@ -86,20 +86,6 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    /*
-     * //asignar un rol con un nombre específico:
-     * public Usuario asignarRolPorNombre(int usuarioId, String nombreRol) {
-     * Usuario usuario = usuarioRepository.findById(usuarioId)
-     * .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-     * Rol rol = rolRepository.findByNombreRol(nombreRol);
-     * if (rol == null) {
-     * throw new RuntimeException("Rol no encontrado");
-     * }
-     * usuario.setRol(rol);
-     * return usuarioRepository.save(usuario);
-     * }
-     */
-
     public void desactivarUsuario(int id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -114,3 +100,19 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 }
+
+
+
+    /*
+     * //asignar un rol con un nombre específico:
+     * public Usuario asignarRolPorNombre(int usuarioId, String nombreRol) {
+     * Usuario usuario = usuarioRepository.findById(usuarioId)
+     * .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+     * Rol rol = rolRepository.findByNombreRol(nombreRol);
+     * if (rol == null) {
+     * throw new RuntimeException("Rol no encontrado");
+     * }
+     * usuario.setRol(rol);
+     * return usuarioRepository.save(usuario);
+     * }
+     */
