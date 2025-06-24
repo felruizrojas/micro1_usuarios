@@ -24,17 +24,25 @@ public class RolController {
     @Autowired
     private RolService rolService;
 
+    /*
+     * Controlador REST para gestionar roles.
+     * Proporciona endpoints para:
+    */
+
+    // Crear un nuevo rol (POST)
     @PostMapping
     public ResponseEntity<Rol> crearRol(@RequestBody Rol rol) {
         Rol nuevoRol = rolService.crearRol(rol);
         return ResponseEntity.ok(nuevoRol);
     }
 
+    // Listar todos los roles (GET)
     @GetMapping
     public List<Rol> listarRoles() {
         return rolService.listarRoles();
     }
 
+    // Obtener un rol por ID (GET)
     @GetMapping("/{id}")
     public ResponseEntity<Rol> obtenerRolPorId(@PathVariable int id) {
         Optional<Rol> rol = rolService.listarRolPorId(id);
@@ -42,18 +50,21 @@ public class RolController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Actualizar los datos de un rol (PUT)
     @PutMapping("/{id}")
     public ResponseEntity<Rol> actualizarRol(@PathVariable int id, @RequestBody Rol rolActualizado) {
         Rol actualizado = rolService.actualizarRol(id, rolActualizado);
         return ResponseEntity.ok(actualizado);
     }
 
+    // Asignar un permiso a un rol (PUT)
     @PutMapping("/{rolId}/permiso/{permisoId}") // PUT /roles/3/permiso/7
     public ResponseEntity<Rol> asignarPermiso(@PathVariable int rolId, @PathVariable int permisoId) {
         Rol rolActualizado = rolService.asignarPermiso(rolId, permisoId);
         return ResponseEntity.ok(rolActualizado);
     }
 
+    // Desactivar un rol (PUT)
     @PutMapping("/{id}/desactivar")
     public ResponseEntity<Void> desactivarRol(@PathVariable int id) {
         rolService.desactivarRol(id);

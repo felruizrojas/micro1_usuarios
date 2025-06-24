@@ -24,17 +24,25 @@ public class PermisoController {
     @Autowired
     private PermisoService permisoService;
 
+    /*
+     * Controlador REST para gestionar permisos.
+     * Proporciona endpoints para:
+    */
+
+    // Crear un nuevo permiso (POST)
     @PostMapping
     public ResponseEntity<Permiso> crearPermiso(@RequestBody Permiso permiso) {
         Permiso nuevoPermiso = permisoService.crearPermiso(permiso);
         return ResponseEntity.ok(nuevoPermiso);
     }
 
+    // Listar todos los permisos (GET)
     @GetMapping
     public List<Permiso> listarPermisos() {
         return permisoService.listarPermisos();
     }
 
+    // Obtener un permiso por ID (GET)
     @GetMapping("/{id}")
     public ResponseEntity<Permiso> obtenerPermisoPorId(@PathVariable int id) {
         Optional<Permiso> permiso = permisoService.listarPermisoPorId(id);
@@ -42,12 +50,14 @@ public class PermisoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Actualizar los datos de un permiso (PUT)
     @PutMapping("/{id}")
     public ResponseEntity<Permiso> actualizarPermiso(@PathVariable int id, @RequestBody Permiso permisoActualizado) {
         Permiso actualizado = permisoService.actualizarPermiso(id, permisoActualizado);
         return ResponseEntity.ok(actualizado);
     }
 
+    // Desactivar un permiso (PUT)
     @PutMapping("/{id}/desactivar")
     public ResponseEntity<Void> desactivarPermiso(@PathVariable int id) {
         permisoService.desactivarPermiso(id);

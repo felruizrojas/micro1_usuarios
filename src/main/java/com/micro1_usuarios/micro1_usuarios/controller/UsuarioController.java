@@ -24,17 +24,25 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    /*
+     * Controlador REST para gestionar usuarios.
+     * Proporciona endpoints para:
+    */
+
+    // Crear un nuevo usuario (POST)
     @PostMapping
     public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
         Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
         return ResponseEntity.ok(nuevoUsuario);
     }
 
+    // Listar todos los usuarios (GET)
     @GetMapping
     public List<Usuario> listarUsuarios() {
         return usuarioService.listarUsuarios();
     }
 
+    // Obtener un usuario por ID (GET)
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> obtenerUsuarioPorId(@PathVariable int id) {
         Optional<Usuario> usuario = usuarioService.listarUsuarioPorId(id);
@@ -42,6 +50,7 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Actualizar los datos de un usuario (PUT)
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> actualizarUsuario(@PathVariable int id, @RequestBody Usuario usuarioActualizado) {
         Usuario actualizado = usuarioService.actualizarUsuario(id, usuarioActualizado);
@@ -55,6 +64,7 @@ public class UsuarioController {
     }
 
     /*
+    // Asignar un rol a un usuario (PUT)
     @PutMapping("/{usuarioId}/asignar-rol/{rolId}") //PUT /usuarios/123/asignar-rol/456
     public ResponseEntity<Usuario> asignarRol(@PathVariable int usuarioId, @PathVariable int rolId) {
         Usuario actualizado = usuarioService.asignarRol(usuarioId, rolId);
@@ -62,6 +72,7 @@ public class UsuarioController {
     }
     */
 
+    // Desactivar un usuario (PUT)
     @PutMapping("/{id}/desactivar")
     public ResponseEntity<Void> desactivarUsuario(@PathVariable int id) {
         usuarioService.desactivarUsuario(id);
