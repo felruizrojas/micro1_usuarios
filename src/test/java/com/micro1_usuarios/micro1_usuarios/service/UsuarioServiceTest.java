@@ -41,7 +41,7 @@ class UsuarioServiceTest {
                 Collections.emptyList() // permisos (lista vacía en esta prueba)
         );
         Usuario usuario = new Usuario(
-                0, // id
+                0,
                 "usuario123", // user
                 "contrasenaSegura", // pass
                 true, // usuarioActivo
@@ -91,12 +91,13 @@ class UsuarioServiceTest {
         verify(usuarioRepository).save(usuario);
     }
 
-
     @Test // test get --> listar usuarios
     void testListarUsuarios() {
         Rol rol = new Rol(1, "ADMIN", true, Collections.emptyList());
-        Usuario u1 = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos", "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana", rol);
-        Usuario u2 = new Usuario(2, "usuario456", "otraContrasena", true, "98765432-1", "Ana", "Maria", "López", "Fernández", "ana.lopez@example.com", "Av. Siempre Viva 456", "Santiago", "Metropolitana", rol);
+        Usuario u1 = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos", "Pérez",
+                "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana", rol);
+        Usuario u2 = new Usuario(2, "usuario456", "otraContrasena", true, "98765432-1", "Ana", "Maria", "López",
+                "Fernández", "ana.lopez@example.com", "Av. Siempre Viva 456", "Santiago", "Metropolitana", rol);
         when(usuarioRepository.findAll()).thenReturn(Arrays.asList(u1, u2));
         List<Usuario> resultado = usuarioService.listarUsuarios();
         assertThat(resultado).hasSize(2).contains(u1, u2);
@@ -106,7 +107,8 @@ class UsuarioServiceTest {
     @Test // test get --> listar usuario por id
     void testListarUsuarioPorId() {
         Rol rol = new Rol(1, "ADMIN", true, Collections.emptyList());
-        Usuario u = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos", "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana", rol);
+        Usuario u = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos", "Pérez",
+                "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana", rol);
         // Simular que el usuario existe en la base de datos
         // y que el método findById devuelve un Optional con el usuario.
         when(usuarioRepository.findById(1)).thenReturn(Optional.of(u));
@@ -133,20 +135,50 @@ class UsuarioServiceTest {
         verify(usuarioRepository).findById(1);
     }
 
-    @Test // test put --> actualizar usuario 
+    @Test // test put --> actualizar usuario
     void testActualizarUsuario() {
         Rol rol = new Rol(1, "ADMIN", true, Collections.emptyList());
-        Usuario usuarioExistente = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos", "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana", rol);
-        Usuario usuarioActualizado = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos", "Pérez", "González", "juan.perez@example.com", "Av. Nunca Viva 456", "Santiago", "Metropolitana", rol);
-        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuarioExistente));
-        when(usuarioRepository.save(usuarioActualizado)).thenReturn(usuarioExistente);
+        Usuario usuarioExistente = new Usuario(
+                1,
+                "usuario123",
+                "contrasenaSegura",
+                true,
+                "12345678-9",
+                "Juan",
+                "Carlos",
+                "Pérez",
+                "González",
+                "juan.perez@example.com",
+                "Av. Siempre Viva 123",
+                "Santiago",
+                "Metropolitana",
+                rol
+            );
 
+        Usuario usuarioActualizado = new Usuario(
+                1,
+                "usuario123",
+                "contrasenaSegura",
+                true,
+                "12345678-9",
+                "Juan",
+                "Carlos",
+                "Pérez",
+                "González",
+                "juan.perez@example.com",
+                "Av. Nunca Viva 456",
+                "Santiago",
+                "Metropolitana",
+                rol
+            );
+
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuarioExistente));
+        when(usuarioRepository.save(usuarioExistente)).thenReturn(usuarioExistente);
         Usuario resultado = usuarioService.actualizarUsuario(1, usuarioActualizado);
         assertThat(resultado.getDireccion()).isEqualTo("Av. Nunca Viva 456");
         verify(usuarioRepository).findById(1);
-        verify(usuarioRepository).save(usuarioActualizado);
+        verify(usuarioRepository).save(usuarioExistente);
     }
-
 
     @Test // test put --> asignar Rol
     void testAsignarRol() {
@@ -164,7 +196,9 @@ class UsuarioServiceTest {
     @Test // desactivarUsuario
     void testDesactivarUsuario() {
         Rol rol = new Rol(1, "ADMIN", true, Collections.emptyList());
-        Usuario usuario = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos", "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana", rol);
+        Usuario usuario = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos",
+                "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana",
+                rol);
         // Simular que el usuario ya existe en la base de datos
         when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
         // Llamar al método desactivarUsuario
@@ -178,7 +212,9 @@ class UsuarioServiceTest {
     @Test // activarUsuario
     void testActivarUsuario() {
         Rol rol = new Rol(1, "ADMIN", true, Collections.emptyList());
-        Usuario usuario = new Usuario(1, "usuario123", "contrasenaSegura", false, "12345678-9", "Juan", "Carlos", "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana", rol);
+        Usuario usuario = new Usuario(1, "usuario123", "contrasenaSegura", false, "12345678-9", "Juan", "Carlos",
+                "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana",
+                rol);
         when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
         usuarioService.activarUsuario(1);
         assertThat(usuario.isUsuarioActivo()).isTrue();

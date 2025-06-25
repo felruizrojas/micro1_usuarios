@@ -2,7 +2,6 @@ package com.micro1_usuarios.micro1_usuarios.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

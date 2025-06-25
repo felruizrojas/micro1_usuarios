@@ -55,6 +55,14 @@ public class RolService {
         Permiso permiso = permisoRepository.findById(permisoId)
                 .orElseThrow(() -> new RuntimeException("Permiso no encontrado"));
         permiso.setRol(rol);
+        // Asegura que la lista de permisos esté inicializada
+        if (rol.getPermisos() == null) {
+            rol.setPermisos(new ArrayList<>());
+        }
+        // Evita agregar duplicados
+        if (!rol.getPermisos().contains(permiso)) {
+            rol.getPermisos().add(permiso);
+        }
         permisoRepository.save(permiso);
         return rol;
     }

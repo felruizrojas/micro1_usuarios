@@ -17,7 +17,6 @@ public class PermisoService {
     private PermisoRepository permisoRepository;
 
     public Permiso crearPermiso(Permiso permiso) {
-        // permiso.setPermisoActivo(true);
         return permisoRepository.save(permiso);
     }
 
@@ -39,6 +38,7 @@ public class PermisoService {
             return permisoRepository.save(permisoActualizado);
         });
     }
+
 
     public void desactivarPermiso(int id) {
         Permiso permiso = permisoRepository.findById(id)
