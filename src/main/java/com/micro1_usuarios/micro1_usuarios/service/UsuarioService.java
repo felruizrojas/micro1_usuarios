@@ -14,19 +14,14 @@ import com.micro1_usuarios.micro1_usuarios.repository.UsuarioRepository;
 @Service
 
 public class UsuarioService {
-
+    
     @Autowired
     private UsuarioRepository usuarioRepository;
 
     @Autowired
     private RolRepository rolRepository;
 
-    /*
-     * public Usuario crearUsuario(Usuario usuario) {
-     * // usuario.setUsuarioActivo(true);
-     * return usuarioRepository.save(usuario);
-     * }
-     */
+    
 
     public Usuario crearUsuario(Usuario usuario) {
         if (usuario.getRol() != null && usuario.getRol().getId() != 0) {
@@ -100,19 +95,3 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 }
-
-
-
-    /*
-     * //asignar un rol con un nombre específico:
-     * public Usuario asignarRolPorNombre(int usuarioId, String nombreRol) {
-     * Usuario usuario = usuarioRepository.findById(usuarioId)
-     * .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-     * Rol rol = rolRepository.findByNombreRol(nombreRol);
-     * if (rol == null) {
-     * throw new RuntimeException("Rol no encontrado");
-     * }
-     * usuario.setRol(rol);
-     * return usuarioRepository.save(usuario);
-     * }
-     */
