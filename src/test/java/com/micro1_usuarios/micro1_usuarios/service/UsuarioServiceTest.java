@@ -41,7 +41,7 @@ class UsuarioServiceTest {
                 Collections.emptyList() // permisos (lista vacía en esta prueba)
         );
         Usuario usuario = new Usuario(
-                1, // id
+                0, // id
                 "usuario123", // user
                 "contrasenaSegura", // pass
                 true, // usuarioActivo
