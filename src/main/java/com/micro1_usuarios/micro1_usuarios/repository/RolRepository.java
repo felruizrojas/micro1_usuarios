@@ -8,7 +8,5 @@ import com.micro1_usuarios.micro1_usuarios.model.Rol;
 @Repository
 
 public interface RolRepository extends JpaRepository<Rol, Integer> {
-    // Aquí puedes agregar métodos personalizados si es necesario
-    //Rol findByNombreRol(String nombreRol);
-
+    
 }

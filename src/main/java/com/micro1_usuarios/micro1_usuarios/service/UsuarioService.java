@@ -12,7 +12,6 @@ import com.micro1_usuarios.micro1_usuarios.repository.RolRepository;
 import com.micro1_usuarios.micro1_usuarios.repository.UsuarioRepository;
 
 @Service
-
 public class UsuarioService {
     
     @Autowired
@@ -21,9 +20,20 @@ public class UsuarioService {
     @Autowired
     private RolRepository rolRepository;
 
-    
+    /*
+     * public Usuario crearUsuario(Usuario usuario) {
+     * // usuario.setUsuarioActivo(true);
+     * return usuarioRepository.save(usuario);
+     * }
+     */
 
     public Usuario crearUsuario(Usuario usuario) {
+        if (usuario.getUser() == null || usuario.getUser().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de usuario es obligatorio.");
+        }
+        if (usuarioRepository.findByUser(usuario.getUser()).isPresent()) {
+            throw new RuntimeException("Ya existe un usuario con ese nombre.");
+        }
         if (usuario.getRol() != null && usuario.getRol().getId() != 0) {
             Rol rol = rolRepository.findById(usuario.getRol().getId())
                     .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
@@ -61,6 +71,14 @@ public class UsuarioService {
                 usuario.setCiudad(usuarioActualizado.getCiudad());
             if (usuarioActualizado.getRegion() != null)
                 usuario.setRegion(usuarioActualizado.getRegion());
+            if (usuarioActualizado.getRol() != null && usuarioActualizado.getRol().getId() != 0) {
+                Rol rol = rolRepository.findById(usuarioActualizado.getRol().getId())
+                        .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+                if (!rol.isRolActivo()) {
+                    throw new RuntimeException("No se puede asignar un rol desactivado");
+                }
+                usuario.setRol(rol);
+            }
             return usuarioRepository.save(usuario);
         }).orElseGet(() -> {
             usuarioActualizado.setId(id);
@@ -84,14 +102,14 @@ public class UsuarioService {
     public void desactivarUsuario(int id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        usuario.setUsuarioActivo(false); // desactivar usuario
+        usuario.setUsuarioActivo(false);
         usuarioRepository.save(usuario);
     }
 
     public void activarUsuario(int id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        usuario.setUsuarioActivo(true); // activar usuario
+        usuario.setUsuarioActivo(true);
         usuarioRepository.save(usuario);
     }
 }

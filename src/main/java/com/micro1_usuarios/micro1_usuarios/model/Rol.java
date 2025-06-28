@@ -1,5 +1,6 @@
 package com.micro1_usuarios.micro1_usuarios.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -45,9 +46,9 @@ public class Rol {
     // Método para filtrar permisos activos
     @JsonProperty("permisos")
     public List<Permiso> getPermisosActivos() {
-        return permisos.stream()
+        return new ArrayList<>(permisos.stream()
                 .filter(Permiso::isPermisoActivo)
-                .toList();
+                .toList());
     }
 
     @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL)

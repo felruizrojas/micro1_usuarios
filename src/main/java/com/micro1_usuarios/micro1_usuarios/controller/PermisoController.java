@@ -45,7 +45,7 @@ public class PermisoController {
     // Obtener un permiso por ID (GET)
     @GetMapping("/{id}")
     public ResponseEntity<Permiso> obtenerPermisoPorId(@PathVariable int id) {
-        Optional<Permiso> permiso = permisoService.listarPermisoPorId(id);
+        Optional<Permiso> permiso = Optional.ofNullable(permisoService.listarPermisoPorId(id));
         return permiso.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

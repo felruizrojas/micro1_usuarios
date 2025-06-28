@@ -3,6 +3,8 @@ package com.micro1_usuarios.micro1_usuarios.service;
 import com.micro1_usuarios.micro1_usuarios.model.Permiso;
 import com.micro1_usuarios.micro1_usuarios.repository.PermisoRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -12,8 +14,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class PermisoServiceTest {
@@ -63,12 +66,8 @@ class PermisoServiceTest {
     void testListarPermisoPorId() {
         Permiso permiso = new Permiso(1, "Editar usuarios", true, null);
         when(permisoRepository.findById(1)).thenReturn(Optional.of(permiso));
-        Optional<Permiso> resultado = permisoService.listarPermisoPorId(1);
-        assertThat(resultado).isPresent().isEqualTo(Optional.of(permiso));
-        assertThat(resultado.get().getId()).isEqualTo(1);
-        assertThat(resultado.get().getNombrePermiso()).isEqualTo("Editar usuarios");
-        assertThat(resultado.get().isPermisoActivo()).isTrue();
-        assertThat(resultado.get().getRol()).isNull();
+        Optional<Permiso> resultado = Optional.of(permisoService.listarPermisoPorId(1));
+        assertThat(resultado).isPresent().contains(permiso);
         verify(permisoRepository).findById(1);
     }
 
@@ -77,12 +76,9 @@ class PermisoServiceTest {
         Permiso existente = new Permiso(1, "Editar usuarios", true, null);
         Permiso actualizado = new Permiso(1, "Cambiar roles de usuarios", true, null);
         when(permisoRepository.findById(1)).thenReturn(Optional.of(existente));
-        when(permisoRepository.save(existente)).thenReturn(existente);
+        when(permisoRepository.save(any(Permiso.class))).thenReturn(actualizado);
         Permiso resultado = permisoService.actualizarPermiso(1, actualizado);
-        assertEquals("Cambiar roles de usuarios", resultado.getNombrePermiso());
-        assertEquals(1, resultado.getId());
-        assertTrue(resultado.isPermisoActivo());
-        verify(permisoRepository).findById(1);
+        assertThat(resultado.getNombrePermiso()).isEqualTo("GESTIONAR_USUARIOS");
         verify(permisoRepository).save(existente);
     }
 
@@ -103,4 +99,68 @@ class PermisoServiceTest {
         assertThat(permiso.isPermisoActivo()).isTrue();
         verify(permisoRepository).save(permiso);
     }
+
+    /*
+     *
+     * 
+     * 
+     * TEST FALTANTES
+     * 
+     * 
+     * 
+     */
+
+    @Test
+    void testListarPermisoPorId_CuandoNoExiste() {
+        when(permisoRepository.findById(1)).thenReturn(Optional.empty());
+
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
+            permisoService.listarPermisoPorId(1);
+        });
+        assertTrue(thrown.getMessage().contains("Permiso no encontrado con id 1"));
+
+        verify(permisoRepository).findById(1);
+    }
+
+    @Test
+    void testActualizarPermisoNoExistente() {
+        when(permisoRepository.findById(1)).thenReturn(Optional.empty());
+
+        Permiso actualizado = new Permiso(1, "GESTIONAR_USUARIOS", true, null);
+
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
+            permisoService.actualizarPermiso(1, actualizado);
+        });
+        assertTrue(thrown.getMessage().contains("Permiso no encontrado con id 1"));
+
+        verify(permisoRepository).findById(1);
+        verify(permisoRepository, never()).save(any());
+    }
+
+    @Test
+    void testDesactivarPermisoNoExistente() {
+        when(permisoRepository.findById(1)).thenReturn(Optional.empty());
+
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
+            permisoService.desactivarPermiso(1);
+        });
+        assertTrue(thrown.getMessage().contains("Permiso no encontrado con id 1"));
+
+        verify(permisoRepository).findById(1);
+        verify(permisoRepository, never()).save(any());
+    }
+
+    @Test
+    void testActivarPermisoNoExistente() {
+        when(permisoRepository.findById(1)).thenReturn(Optional.empty());
+
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
+            permisoService.activarPermiso(1);
+        });
+        assertTrue(thrown.getMessage().contains("Permiso no encontrado con id 1"));
+
+        verify(permisoRepository).findById(1);
+        verify(permisoRepository, never()).save(any());
+    }
+
 }

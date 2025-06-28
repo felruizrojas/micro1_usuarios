@@ -8,7 +8,5 @@ import com.micro1_usuarios.micro1_usuarios.model.Permiso;
 @Repository
 
 public interface PermisoRepository extends JpaRepository<Permiso, Integer> {
-
     
-
 }

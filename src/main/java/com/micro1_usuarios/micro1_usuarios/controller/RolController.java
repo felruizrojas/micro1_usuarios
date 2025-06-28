@@ -39,21 +39,21 @@ public class RolController {
     // Listar todos los roles (GET)
     @GetMapping
     public List<Rol> listarRoles() {
-        return rolService.listarRoles();
+        return rolService.obtenerRoles();
     }
 
     // Obtener un rol por ID (GET)
     @GetMapping("/{id}")
-    public ResponseEntity<Rol> obtenerRolPorId(@PathVariable int id) {
-        Optional<Rol> rol = rolService.listarRolPorId(id);
+    public ResponseEntity<Rol> listarRolPorId(@PathVariable int id) {
+        Optional<Rol> rol = rolService.obtenerRolPorId(id);
         return rol.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     // Actualizar los datos de un rol (PUT)
     @PutMapping("/{id}")
-    public ResponseEntity<Rol> actualizarRol(@PathVariable int id, @RequestBody Rol rolActualizado) {
-        Rol actualizado = rolService.actualizarRol(id, rolActualizado);
+    public ResponseEntity<Rol> actualizarRol(@PathVariable int id, @RequestBody Rol nuevoRol) {
+        Rol actualizado = rolService.actualizarRol(id, nuevoRol);
         return ResponseEntity.ok(actualizado);
     }
 

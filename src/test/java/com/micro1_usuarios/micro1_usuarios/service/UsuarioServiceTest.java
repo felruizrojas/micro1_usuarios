@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class UsuarioServiceTest {
@@ -109,6 +113,8 @@ class UsuarioServiceTest {
         Rol rol = new Rol(1, "ADMIN", true, Collections.emptyList());
         Usuario u = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos", "Pérez",
                 "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana", rol);
+        Usuario u = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos", "Pérez",
+                "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana", rol);
         // Simular que el usuario existe en la base de datos
         // y que el método findById devuelve un Optional con el usuario.
         when(usuarioRepository.findById(1)).thenReturn(Optional.of(u));
@@ -136,44 +142,18 @@ class UsuarioServiceTest {
     }
 
     @Test // test put --> actualizar usuario
+    @Test // test put --> actualizar usuario
     void testActualizarUsuario() {
         Rol rol = new Rol(1, "ADMIN", true, Collections.emptyList());
-        Usuario usuarioExistente = new Usuario(
-                1,
-                "usuario123",
-                "contrasenaSegura",
-                true,
-                "12345678-9",
-                "Juan",
-                "Carlos",
-                "Pérez",
-                "González",
-                "juan.perez@example.com",
-                "Av. Siempre Viva 123",
-                "Santiago",
-                "Metropolitana",
-                rol
-            );
-
-        Usuario usuarioActualizado = new Usuario(
-                1,
-                "usuario123",
-                "contrasenaSegura",
-                true,
-                "12345678-9",
-                "Juan",
-                "Carlos",
-                "Pérez",
-                "González",
-                "juan.perez@example.com",
-                "Av. Nunca Viva 456",
-                "Santiago",
-                "Metropolitana",
-                rol
-            );
-
+        Usuario usuarioExistente = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan",
+                "Carlos", "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago",
+                "Metropolitana", rol);
+        Usuario usuarioActualizado = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan",
+                "Carlos", "Pérez", "González", "juan.perez@example.com", "Av. Nunca Viva 456", "Santiago",
+                "Metropolitana", rol);
         when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuarioExistente));
-        when(usuarioRepository.save(usuarioExistente)).thenReturn(usuarioExistente);
+        when(rolRepository.findById(1)).thenReturn(Optional.of(rol));
+        when(usuarioRepository.save(usuarioActualizado)).thenReturn(usuarioExistente);
         Usuario resultado = usuarioService.actualizarUsuario(1, usuarioActualizado);
         assertThat(resultado.getDireccion()).isEqualTo("Av. Nunca Viva 456");
         verify(usuarioRepository).findById(1);
@@ -199,6 +179,9 @@ class UsuarioServiceTest {
         Usuario usuario = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos",
                 "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana",
                 rol);
+        Usuario usuario = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos",
+                "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana",
+                rol);
         // Simular que el usuario ya existe en la base de datos
         when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
         // Llamar al método desactivarUsuario
@@ -215,9 +198,178 @@ class UsuarioServiceTest {
         Usuario usuario = new Usuario(1, "usuario123", "contrasenaSegura", false, "12345678-9", "Juan", "Carlos",
                 "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana",
                 rol);
+        Usuario usuario = new Usuario(1, "usuario123", "contrasenaSegura", false, "12345678-9", "Juan", "Carlos",
+                "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana",
+                rol);
         when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
         usuarioService.activarUsuario(1);
         assertThat(usuario.isUsuarioActivo()).isTrue();
         verify(usuarioRepository).save(usuario);
+    }
+
+    /*
+     * 
+     * 
+     * 
+     * TEST FALTANTES
+     * 
+     * 
+     * 
+     */
+
+    @Test
+    void testCrearUsuarioConNombreNulo() {
+        Usuario usuario = new Usuario();
+        usuario.setUser(null);
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> usuarioService.crearUsuario(usuario));
+        assertEquals("El nombre de usuario es obligatorio.", ex.getMessage());
+    }
+
+    @Test
+    void testCrearUsuarioConNombreVacio() {
+        Usuario usuario = new Usuario();
+        usuario.setUser("");
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> usuarioService.crearUsuario(usuario));
+        assertEquals("El nombre de usuario es obligatorio.", ex.getMessage());
+    }
+
+    @Test
+    void testCrearUsuarioNombreYaExistente() {
+        Usuario usuario = new Usuario();
+        usuario.setUser("usuarioExistente");
+        when(usuarioRepository.findByUser("usuarioExistente")).thenReturn(Optional.of(new Usuario()));
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> usuarioService.crearUsuario(usuario));
+        assertEquals("Ya existe un usuario con ese nombre.", ex.getMessage());
+    }
+
+    @Test
+    void testCrearUsuarioConRolNoEncontrado() {
+        Usuario usuario = new Usuario();
+        usuario.setUser("nuevoUsuario");
+        Rol rol = new Rol();
+        rol.setId(99);
+        usuario.setRol(rol);
+
+        when(usuarioRepository.findByUser("nuevoUsuario")).thenReturn(Optional.empty());
+        when(rolRepository.findById(99)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> usuarioService.crearUsuario(usuario));
+        assertEquals("Rol no encontrado", ex.getMessage());
+    }
+
+    @Test
+    void testCrearUsuarioConRolDesactivado() {
+        Usuario usuario = new Usuario();
+        usuario.setUser("nuevoUsuario");
+        Rol rol = new Rol();
+        rol.setId(1);
+        rol.setRolActivo(false);
+        usuario.setRol(rol);
+
+        when(usuarioRepository.findByUser("nuevoUsuario")).thenReturn(Optional.empty());
+        when(rolRepository.findById(1)).thenReturn(Optional.of(rol));
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> usuarioService.crearUsuario(usuario));
+        assertEquals("No se puede usar un rol desactivado al crear el usuario", ex.getMessage());
+    }
+
+    @Test
+    void testActualizarUsuarioConRolNoEncontrado() {
+        Usuario usuarioExistente = new Usuario();
+        usuarioExistente.setId(1);
+
+        Usuario usuarioActualizado = new Usuario();
+        Rol rol = new Rol();
+        rol.setId(99);
+        usuarioActualizado.setRol(rol);
+
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuarioExistente));
+        when(rolRepository.findById(99)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> usuarioService.actualizarUsuario(1, usuarioActualizado));
+        assertEquals("Rol no encontrado", ex.getMessage());
+    }
+
+    @Test
+    void testActualizarUsuarioConRolDesactivado() {
+        Usuario usuarioExistente = new Usuario();
+        usuarioExistente.setId(1);
+
+        Usuario usuarioActualizado = new Usuario();
+        Rol rol = new Rol();
+        rol.setId(1);
+        rol.setRolActivo(false);
+        usuarioActualizado.setRol(rol);
+
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuarioExistente));
+        when(rolRepository.findById(1)).thenReturn(Optional.of(rol));
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> usuarioService.actualizarUsuario(1, usuarioActualizado));
+        assertEquals("No se puede asignar un rol desactivado", ex.getMessage());
+    }
+
+    @Test
+    void testActualizarUsuarioNoExistenteCreaNuevo() {
+        Usuario usuarioActualizado = new Usuario();
+        usuarioActualizado.setUser("nuevoUser");
+
+        when(usuarioRepository.findById(1)).thenReturn(Optional.empty());
+        when(usuarioRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Usuario resultado = usuarioService.actualizarUsuario(1, usuarioActualizado);
+
+        assertEquals(1, resultado.getId());
+        assertTrue(resultado.isUsuarioActivo());
+        assertEquals("nuevoUser", resultado.getUser());
+        verify(usuarioRepository).save(any());
+    }
+
+    @Test
+    void testAsignarRolUsuarioNoEncontrado() {
+        when(usuarioRepository.findById(1)).thenReturn(Optional.empty());
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> usuarioService.asignarRol(1, 1));
+        assertEquals("Usuario no encontrado", ex.getMessage());
+    }
+
+    @Test
+    void testAsignarRolNoEncontrado() {
+        Usuario usuario = new Usuario();
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
+        when(rolRepository.findById(1)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> usuarioService.asignarRol(1, 1));
+        assertEquals("Rol no encontrado", ex.getMessage());
+    }
+
+    @Test
+    void testAsignarRolDesactivado() {
+        Usuario usuario = new Usuario();
+        Rol rol = new Rol();
+        rol.setRolActivo(false);
+
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
+        when(rolRepository.findById(1)).thenReturn(Optional.of(rol));
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> usuarioService.asignarRol(1, 1));
+        assertEquals("No se puede asignar un rol desactivado", ex.getMessage());
+    }
+
+    @Test
+    void testDesactivarUsuarioNoEncontrado() {
+        when(usuarioRepository.findById(1)).thenReturn(Optional.empty());
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> usuarioService.desactivarUsuario(1));
+        assertEquals("Usuario no encontrado", ex.getMessage());
+    }
+
+    @Test
+    void testActivarUsuarioNoEncontrado() {
+        when(usuarioRepository.findById(1)).thenReturn(Optional.empty());
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> usuarioService.activarUsuario(1));
+        assertEquals("Usuario no encontrado", ex.getMessage());
     }
 }

@@ -12,6 +12,8 @@ import com.micro1_usuarios.micro1_usuarios.model.Rol;
 import com.micro1_usuarios.micro1_usuarios.repository.PermisoRepository;
 import com.micro1_usuarios.micro1_usuarios.repository.RolRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 
 public class RolService {
@@ -25,58 +27,55 @@ public class RolService {
     public Rol crearRol(Rol rol) {
         if (rol.getPermisos() == null) {
             rol.setPermisos(new ArrayList<>());
+        } else {
+            // Establecer la relación inversa en cada permiso
+            for (Permiso permiso : rol.getPermisos()) {
+                permiso.setRol(rol);
+            }
         }
         return rolRepository.save(rol);
     }
 
-    public List<Rol> listarRoles() {
+    public List<Rol> obtenerRoles() {
         return rolRepository.findAll();
     }
 
-    public Optional<Rol> listarRolPorId(int id) {
+    public Optional<Rol> obtenerRolPorId(int id) {
         return rolRepository.findById(id);
     }
 
-    public Rol actualizarRol(int id, Rol rolActualizado) {
-        return rolRepository.findById(id).map(rol -> {
-            if (rolActualizado.getNombreRol() != null)
-                rol.setNombreRol(rolActualizado.getNombreRol());
-            return rolRepository.save(rol);
+    public Rol actualizarRol(int id, Rol nuevoRol) {
+        return rolRepository.findById(id).map(rolExistente -> {
+            if (nuevoRol.getNombreRol() != null)
+                rolExistente.setNombreRol(nuevoRol.getNombreRol());
+            return rolRepository.save(rolExistente);
         }).orElseGet(() -> {
-            rolActualizado.setId(id);
-            rolActualizado.setRolActivo(true);
-            return rolRepository.save(rolActualizado);
+            nuevoRol.setId(id);
+            nuevoRol.setRolActivo(true);
+            return rolRepository.save(nuevoRol);
         });
     }
 
     public Rol asignarPermiso(int rolId, int permisoId) {
         Rol rol = rolRepository.findById(rolId)
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Rol no encontrado con ID: " + rolId));
         Permiso permiso = permisoRepository.findById(permisoId)
                 .orElseThrow(() -> new RuntimeException("Permiso no encontrado"));
         permiso.setRol(rol);
-        // Asegura que la lista de permisos esté inicializada
-        if (rol.getPermisos() == null) {
-            rol.setPermisos(new ArrayList<>());
-        }
-        // Evita agregar duplicados
-        if (!rol.getPermisos().contains(permiso)) {
-            rol.getPermisos().add(permiso);
-        }
         permisoRepository.save(permiso);
         return rol;
     }
 
     public void desactivarRol(int id) {
         Rol rol = rolRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Rol no encontrado con ID: " + id));
         rol.setRolActivo(false); //
         rolRepository.save(rol);
     }
 
     public void activarRol(int id) {
         Rol rol = rolRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Rol no encontrado con ID: " + id));
         rol.setRolActivo(true); //
         rolRepository.save(rol);
     }

@@ -1,5 +1,6 @@
 package com.micro1_usuarios.micro1_usuarios.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -17,10 +19,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity // en una entidad de intersección se crearía una clase @Data sin @Entity y se le
-        // asignaría la tabla de intersección
+@Entity
 @Table(name = "usuarios")
-
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +29,7 @@ public class Usuario {
     @Column(length = 13, nullable = false, unique = true)
     private String user;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(length = 50, nullable = false)
     private String pass;
 
@@ -63,24 +64,22 @@ public class Usuario {
     @Column(length = 250, nullable = false)
     private String region;
 
-    // Método para mostrar el estado como texto en la respuesta JSON
     @JsonProperty("estado")
     public String getEstado() {
         return usuarioActivo ? "activo" : "desactivo";
     }
 
-    // Getter personalizado para serializar el rol solo si está activo
+    @ManyToOne
+    @JoinColumn(name = "rol_id")
+    @JsonIgnore
+    private Rol rol;
+
     @JsonProperty("rol")
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public Rol getRolActivo() {
-        if (this.rol != null && this.rol.isRolActivo()) {
-            return this.rol;
+    public Rol getRolVisible() {
+        if (rol != null && rol.isRolActivo()) {
+            return rol;
         }
         return null;
     }
-
-    @ManyToOne
-    // @JsonBackReference
-    private Rol rol;
-
 }
