@@ -113,8 +113,6 @@ class UsuarioServiceTest {
         Rol rol = new Rol(1, "ADMIN", true, Collections.emptyList());
         Usuario u = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos", "Pérez",
                 "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana", rol);
-        Usuario u = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos", "Pérez",
-                "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana", rol);
         // Simular que el usuario existe en la base de datos
         // y que el método findById devuelve un Optional con el usuario.
         when(usuarioRepository.findById(1)).thenReturn(Optional.of(u));
@@ -141,7 +139,6 @@ class UsuarioServiceTest {
         verify(usuarioRepository).findById(1);
     }
 
-    @Test // test put --> actualizar usuario
     @Test // test put --> actualizar usuario
     void testActualizarUsuario() {
         Rol rol = new Rol(1, "ADMIN", true, Collections.emptyList());
@@ -179,9 +176,6 @@ class UsuarioServiceTest {
         Usuario usuario = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos",
                 "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana",
                 rol);
-        Usuario usuario = new Usuario(1, "usuario123", "contrasenaSegura", true, "12345678-9", "Juan", "Carlos",
-                "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana",
-                rol);
         // Simular que el usuario ya existe en la base de datos
         when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
         // Llamar al método desactivarUsuario
@@ -195,9 +189,6 @@ class UsuarioServiceTest {
     @Test // activarUsuario
     void testActivarUsuario() {
         Rol rol = new Rol(1, "ADMIN", true, Collections.emptyList());
-        Usuario usuario = new Usuario(1, "usuario123", "contrasenaSegura", false, "12345678-9", "Juan", "Carlos",
-                "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana",
-                rol);
         Usuario usuario = new Usuario(1, "usuario123", "contrasenaSegura", false, "12345678-9", "Juan", "Carlos",
                 "Pérez", "González", "juan.perez@example.com", "Av. Siempre Viva 123", "Santiago", "Metropolitana",
                 rol);
