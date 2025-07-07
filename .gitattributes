@@ -1,0 +1,22 @@
+/mvnw text eol=lf
+
+# Establece reglas generales de texto
+* text=auto
+
+# Scripts de shell para Unix/macOS deben usar LF
+*.sh text eol=lf
+
+# Scripts por lotes de Windows deben usar CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Archivos comunes en proyectos Java
+*.java text
+*.xml text
+*.yml text
+*.yaml text
+*.properties text
+
+# Evita diferencias innecesarias por formato
+*.md text
+*.txt text
